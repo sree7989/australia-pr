@@ -101,13 +101,22 @@ const handleSubmit = async () => {
 
             {/* headline */}
             <div>
-              <h1 className="text-5xl font-semibold leading-tight text-slate-900">
-                Australia PR
-                <br />
-                <span className="text-orange-500 font-bold">
-                  eligibility made simple
-                </span>
-              </h1>
+              <h1 className="text-center max-w-3xl mx-auto">
+  {/* MAIN TITLE */}
+  <span className="block text-5xl md:text-6xl font-extrabold tracking-tight text-[#0A2A66]">
+    Australia <span className="text-[#D80027]">PR</span>
+  </span>
+
+  {/* SUB TITLE */}
+  <span className="mt-4 block text-xl md:text-2xl font-medium text-slate-600">
+    eligibility made <span className="font-semibold text-[#D80027]">simple</span>
+  </span>
+
+  {/* UNDERLINE */}
+  <div className="mx-auto mt-6 h-[3px] w-24 rounded-full bg-gradient-to-r from-[#0A2A66] via-[#B0B7C3] to-[#D80027]" />
+</h1>
+
+
 
               <p className="mt-5 text-lg text-slate-600 max-w-xl">
                 A quick, points-based check designed to give you
