@@ -1,18 +1,20 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
+export const runtime = "nodejs";
+
 
 export async function POST(request) {
   try {
-    const body = await request.json();
+   const formData = await request.formData();
 
-    const {
-      name,
-      email,
-      phone,
-      age,
-      qualification,
-      experience,
-    } = body;
+const name = formData.get("name");
+const email = formData.get("email");
+const phone = formData.get("phone");
+const age = formData.get("age");
+const qualification = formData.get("qualification");
+const experience = formData.get("experience");
+const resume = formData.get("resume"); // file (optional)
+
 
     const referer =
       request.headers.get("referer") || "Direct visit";
@@ -31,7 +33,8 @@ export async function POST(request) {
        1️⃣ ADMIN EMAIL (YOU)
     =============================== */
     await transporter.sendMail({
-      from: `"VJC Overseas" <${process.env.EMAIL_FROM}>`,
+      from: `"VJC Overseas" <${process.env.EMAIL_USER}>`,
+
       to: process.env.EMAIL_USER,
       subject: `🇦🇺 New Australia PR Lead - ${name}`,
       html: `
@@ -59,13 +62,22 @@ export async function POST(request) {
           VJC Overseas · Australia PR Leads
         </p>
       `,
+       attachments: resume
+    ? [
+        {
+          filename: resume.name,
+          content: Buffer.from(await resume.arrayBuffer()),
+        },
+      ]
+    : [],
     });
 
     /* ===============================
        2️⃣ AUTO-REPLY TO USER
     =============================== */
     await transporter.sendMail({
-      from: `"VJC Overseas" <${process.env.EMAIL_FROM}>`,
+     from: `"VJC Overseas" <${process.env.EMAIL_USER}>`,
+
       to: email,
       subject: `✅ Thank You ${name} – Australia PR Assessment Received`,
       html: `

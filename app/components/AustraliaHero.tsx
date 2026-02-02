@@ -10,6 +10,7 @@ type FormState = {
   age: string;
   qualification: string;
   experience: string;
+  resume: File | null; 
 };
 
 export default function AustraliaHero() {
@@ -21,6 +22,7 @@ export default function AustraliaHero() {
     age: "",
     qualification: "",
     experience: "",
+     resume: null,
   });
 
   const update = (key: keyof FormState, value: string) => {
@@ -61,10 +63,22 @@ const handleSubmit = async () => {
   }
 
   try {
+    const data = new FormData();
+    data.append("name", form.name);
+data.append("phone", form.phone);
+data.append("email", form.email);
+data.append("age", form.age);
+data.append("qualification", form.qualification);
+data.append("experience", form.experience);
+
+if (form.resume) {
+  data.append("resume", form.resume);
+}
+
+
     const res = await fetch("/api/assessment", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+       body: data,
     });
 
     if (!res.ok) {
@@ -72,15 +86,11 @@ const handleSubmit = async () => {
       alert("Submit failed: " + errorText);
       return;
     }
-
-    // ✅ SUCCESS → redirect
     router.push("/australia-pr-2026/thankyou");
   } catch (err) {
     alert("Something went wrong");
   }
 };
-
-
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-12">
@@ -96,9 +106,6 @@ const handleSubmit = async () => {
     <span className="text-slate-600">Points-based Assessment</span>
   </p>
 </div>
-
-
-
             {/* headline */}
             <div>
               <h1 className="text-center max-w-3xl mx-auto">
@@ -106,8 +113,6 @@ const handleSubmit = async () => {
   <span className="block text-5xl md:text-6xl font-extrabold tracking-tight text-[#0A2A66]">
     Australia <span className="text-[#D80027]">PR</span>
   </span>
-
-  {/* SUB TITLE */}
   <span className="mt-4 block text-xl md:text-2xl font-medium text-slate-600">
     eligibility made <span className="font-semibold text-[#D80027]">simple</span>
   </span>
@@ -115,9 +120,6 @@ const handleSubmit = async () => {
   {/* UNDERLINE */}
   <div className="mx-auto mt-6 h-[3px] w-24 rounded-full bg-gradient-to-r from-[#0A2A66] via-[#B0B7C3] to-[#D80027]" />
 </h1>
-
-
-
               <p className="mt-5 text-lg text-slate-600 max-w-xl">
                 A quick, points-based check designed to give you
                 <span className="font-medium text-slate-800"> real clarity</span>
@@ -159,7 +161,7 @@ const handleSubmit = async () => {
               ))}
             </div>
 
-            {/* 🔥 NEW STUNNING BOTTOM SECTION */}
+            
             <div className="mt-6 max-w-xl rounded-2xl border bg-gradient-to-br from-slate-50 to-white p-6">
               <p className="text-sm font-semibold text-slate-900 mb-4">
                 Why professionals trust our assessment
@@ -259,6 +261,31 @@ const handleSubmit = async () => {
                   onChange={(e) => update("email", e.target.value)}
                 />
               </div>
+              <div className="border-t px-5 py-4 space-y-2">
+  <p className="text-xs font-medium">Upload Resume</p>
+
+<label className="inline-block cursor-pointer">
+  <input
+    type="file"
+    accept=".pdf,.doc,.docx"
+    className="hidden"
+    onChange={(e) => {
+      const file = e.target.files?.[0] || null;
+      setForm((prev) => ({ ...prev, resume: file }));
+    }}
+  />
+
+  <span className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition">
+    Choose File
+  </span>
+</label>
+
+  {form.resume && (
+    <p className="text-[11px] text-green-600">
+      Selected: {form.resume.name}
+    </p>
+  )}
+</div>
 
               <div className="border-t px-5 py-3">
                 <p className="text-xs font-medium mb-2">Age</p>
